@@ -1,5 +1,6 @@
 package roomescape;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -9,10 +10,12 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Semaphore;
 
 @Controller
 public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
+    private final Semaphore idSemaphore = new Semaphore(1, true);
 
     @GetMapping("/reservation")
     public String reservation() {
@@ -33,9 +36,22 @@ public class ReservationController {
         if (reservation.getName().isEmpty() || reservation.getDate().isEmpty() || reservation.getTime().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+        try {
+            idSemaphore.acquire();
+            long maxId = 0;
+            for (Reservation r : reservations) {
+                if (r.getId() > maxId) {
+                    maxId = r.getId();
+                }
+            }
+            reservation.setId(maxId + 1);
+            reservations.add(reservation);
+        } catch (InterruptedException e) {
+            return create(reservation);
+        } finally {
+            idSemaphore.release();
+        }
 
-        reservation.setId((long)reservations.size() + 1);
-        reservations.add(reservation);
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).contentType(MediaType.APPLICATION_JSON).body(reservation);
     }
     @DeleteMapping("/reservations/{id}")
