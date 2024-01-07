@@ -10,6 +10,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.Semaphore;
 
 @Controller
@@ -56,16 +57,26 @@ public class ReservationController {
     }
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Reservation reservation = reservations.stream()
+        /** Reservation reservation = reservations.stream()
                 .filter(it -> Objects.equals(it.getId(), id))
                 .findFirst()
                 .orElse(null);
-
         if(reservation == null) {
             return ResponseEntity.badRequest().build();
         }
-
         reservations.remove(reservation);
+         **/
+
+        // orElse 대신 optional을 사용
+        Optional<Reservation> reservation = reservations.stream()
+                .filter(it -> Objects.equals(it.getId(), id))
+                .findFirst();
+
+        if(reservation.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        reservations.remove(reservation.get());
 
         return ResponseEntity.noContent().build();
     }
