@@ -34,8 +34,14 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
-        if (reservation.getName().isEmpty() || reservation.getDate().isEmpty() || reservation.getTime().isEmpty()) {
-            return ResponseEntity.badRequest().build();
+        if (reservation.getName().isEmpty()){
+            return handleNotFoundReservationException(new NotFoundReservationException("Name of Reservation is empty"));
+        }
+        if (reservation.getDate().isEmpty()){
+            return handleNotFoundReservationException(new NotFoundReservationException("Date of Reservation is empty"));
+        }
+        if (reservation.getTime().isEmpty()){
+            return handleNotFoundReservationException(new NotFoundReservationException("Time of Reservation is empty"));
         }
         try {
             idSemaphore.acquire();
@@ -80,4 +86,9 @@ public class ReservationController {
 
         return ResponseEntity.noContent().build();
     }
+    @ExceptionHandler(NotFoundReservationException.class)
+    public ResponseEntity handleNotFoundReservationException(NotFoundReservationException e) {
+        return ResponseEntity.badRequest().build();
+    }
+
 }
