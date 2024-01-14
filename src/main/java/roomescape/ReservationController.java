@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 public class ReservationController {
@@ -68,14 +66,8 @@ public class ReservationController {
          reservations.remove(reservation);
          **/
 
-        // orElse 대신 optional을 사용
-        Optional<Reservation> reservation = reservations.stream().filter(it -> Objects.equals(it.getId(), id)).findFirst();
-
-        if (reservation.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        reservations.remove(reservation.get());
+        ReservationUpdatingDAO reservationUpdatingDAO = new ReservationUpdatingDAO(jdbcTemplate);
+        reservationUpdatingDAO.delete(id);
 
         return ResponseEntity.noContent().build();
     }
