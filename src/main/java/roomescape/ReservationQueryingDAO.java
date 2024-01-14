@@ -4,6 +4,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class ReservationQueryingDAO {
     private final JdbcTemplate jdbcTemplate;
@@ -14,5 +16,10 @@ public class ReservationQueryingDAO {
 
     public ReservationQueryingDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<Reservation> findAllReservations() {
+        String sql = "select * from reservation";
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
 }
