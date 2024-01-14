@@ -12,12 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.Semaphore;
 
 @Controller
 public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
-    private final Semaphore idSemaphore = new Semaphore(1, true);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -50,21 +48,10 @@ public class ReservationController {
         if (reservation.getTime().isEmpty()) {
             return handleNotFoundReservationException(new NotFoundReservationException("Time of Reservation is empty"));
         }
-        try {
-            idSemaphore.acquire();
-            long maxId = 0;
-            for (Reservation r : reservations) {
-                if (r.getId() > maxId) {
-                    maxId = r.getId();
-                }
-            }
-            reservation.setId(maxId + 1);
-            reservations.add(reservation);
-        } catch (InterruptedException e) {
-            return create(reservation);
-        } finally {
-            idSemaphore.release();
-        }
+
+        ReservationUpdatingDAO reservationUpdatingDAO = new ReservationUpdatingDAO(jdbcTemplate);
+        Long id = reservationUpdatingDAO.insertWithKeyHolder(reservation);
+        reservation.setId(id);
 
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).contentType(MediaType.APPLICATION_JSON).body(reservation);
     }
