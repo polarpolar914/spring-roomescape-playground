@@ -1,6 +1,5 @@
 package roomescape;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,6 +21,7 @@ public class ReservationController {
     public String reservation() {
         return "reservation";
     }
+
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> read() {
         //Test 코드의 .body("size()", is(3));를 통과시키기 위해 임의로 Reservation을 3개 생성
@@ -34,13 +34,13 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
-        if (reservation.getName().isEmpty()){
+        if (reservation.getName().isEmpty()) {
             return handleNotFoundReservationException(new NotFoundReservationException("Name of Reservation is empty"));
         }
-        if (reservation.getDate().isEmpty()){
+        if (reservation.getDate().isEmpty()) {
             return handleNotFoundReservationException(new NotFoundReservationException("Date of Reservation is empty"));
         }
-        if (reservation.getTime().isEmpty()){
+        if (reservation.getTime().isEmpty()) {
             return handleNotFoundReservationException(new NotFoundReservationException("Time of Reservation is empty"));
         }
         try {
@@ -61,24 +61,23 @@ public class ReservationController {
 
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).contentType(MediaType.APPLICATION_JSON).body(reservation);
     }
+
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         /** Reservation reservation = reservations.stream()
-                .filter(it -> Objects.equals(it.getId(), id))
-                .findFirst()
-                .orElse(null);
-        if(reservation == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        reservations.remove(reservation);
+         .filter(it -> Objects.equals(it.getId(), id))
+         .findFirst()
+         .orElse(null);
+         if(reservation == null) {
+         return ResponseEntity.badRequest().build();
+         }
+         reservations.remove(reservation);
          **/
 
         // orElse 대신 optional을 사용
-        Optional<Reservation> reservation = reservations.stream()
-                .filter(it -> Objects.equals(it.getId(), id))
-                .findFirst();
+        Optional<Reservation> reservation = reservations.stream().filter(it -> Objects.equals(it.getId(), id)).findFirst();
 
-        if(reservation.isEmpty()) {
+        if (reservation.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -86,6 +85,7 @@ public class ReservationController {
 
         return ResponseEntity.noContent().build();
     }
+
     @ExceptionHandler(NotFoundReservationException.class)
     public ResponseEntity handleNotFoundReservationException(NotFoundReservationException e) {
         return ResponseEntity.badRequest().build();
