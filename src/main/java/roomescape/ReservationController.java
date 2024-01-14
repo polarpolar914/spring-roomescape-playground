@@ -1,7 +1,9 @@
 package roomescape;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,9 @@ public class ReservationController {
     private final List<Reservation> reservations = new ArrayList<>();
     private final Semaphore idSemaphore = new Semaphore(1, true);
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @GetMapping("/reservation")
     public String reservation() {
         return "reservation";
@@ -29,7 +34,9 @@ public class ReservationController {
         //reservations.add(new Reservation(2, "브라운", "2021-08-05", "15:40"));
         //reservations.add(new Reservation(3, "브라운", "2021-08-05", "15:40"));
 
-        return ResponseEntity.ok(reservations);
+        //return ResponseEntity.ok(reservations); -- 2단계 코드
+        List<Reservation> reservations = new ReservationQueryingDAO(jdbcTemplate).findAllReservations();
+        return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping("/reservations")
