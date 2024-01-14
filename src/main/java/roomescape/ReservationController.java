@@ -67,9 +67,13 @@ public class ReservationController {
          **/
 
         ReservationUpdatingDAO reservationUpdatingDAO = new ReservationUpdatingDAO(jdbcTemplate);
-        reservationUpdatingDAO.delete(id);
-
-        return ResponseEntity.noContent().build();
+        boolean exist = reservationUpdatingDAO.delete(id);
+        if (!exist) {
+            return ResponseEntity.badRequest().build();
+        }
+        else{
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @ExceptionHandler(NotFoundReservationException.class)

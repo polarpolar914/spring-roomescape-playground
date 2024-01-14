@@ -38,8 +38,14 @@ public class ReservationUpdatingDAO {
         return keyHolder.getKey().longValue();
     }
 
-    public void delete(Long id) {
-        String sql = "delete from reservation where id = ?";
+    public boolean delete(Long id) {
+        String sql = "SELECT COUNT(*) FROM reservation WHERE id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        if (count == 0) {
+            return false;
+        }
+        sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
+        return true;
     }
 }
