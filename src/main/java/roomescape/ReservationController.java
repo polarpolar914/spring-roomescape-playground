@@ -35,7 +35,8 @@ public class ReservationController {
         //reservations.add(new Reservation(3, "브라운", "2021-08-05", "15:40"));
 
         //return ResponseEntity.ok(reservations); -- 2단계 코드
-        List<Reservation> reservations = new ReservationQueryingDAO(jdbcTemplate).findAllReservations();
+        ReservationQueryingDAO reservationQueryingDAO = ReservationQueryingDAO.getInstance(jdbcTemplate);
+        List<Reservation> reservations = reservationQueryingDAO.findAllReservations();
         return ResponseEntity.ok().body(reservations);
     }
 

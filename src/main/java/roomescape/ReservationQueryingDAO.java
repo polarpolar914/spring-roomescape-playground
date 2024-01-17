@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ReservationQueryingDAO {
+    private static ReservationQueryingDAO instance = null;
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         Reservation reservation = new Reservation(resultSet.getLong("id"), resultSet.getString("name"),
@@ -14,8 +15,15 @@ public class ReservationQueryingDAO {
         return reservation;
     };
 
-    public ReservationQueryingDAO(JdbcTemplate jdbcTemplate) {
+    protected ReservationQueryingDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public static ReservationQueryingDAO getInstance(JdbcTemplate jdbcTemplate) {
+        if (instance == null) {
+            instance = new ReservationQueryingDAO(jdbcTemplate);
+        }
+        return instance;
     }
 
     public List<Reservation> findAllReservations() {
