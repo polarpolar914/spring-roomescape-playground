@@ -1,19 +1,19 @@
 package roomescape;
 
+import java.sql.PreparedStatement;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.util.Objects;
-
 @Repository
 public class ReservationUpdatingDAO {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation(resultSet.getLong("id"), resultSet.getString("name"), resultSet.getString("date"), resultSet.getString("time"));
+        Reservation reservation = new Reservation(resultSet.getLong("id"), resultSet.getString("name"),
+                resultSet.getString("date"), resultSet.getString("time"));
         return reservation;
     };
 

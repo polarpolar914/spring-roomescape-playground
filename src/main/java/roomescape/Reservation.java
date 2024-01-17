@@ -1,10 +1,10 @@
 package roomescape;
 
 public class Reservation {
-    private long id;
     private final String name;
     private final String date;
     private final String time;
+    private long id;
 
     public Reservation(long id, String name, String date, String time) {
         this.id = id;

@@ -1,15 +1,19 @@
 package roomescape;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class ReservationController {
@@ -51,7 +55,8 @@ public class ReservationController {
         Long id = reservationUpdatingDAO.insertWithKeyHolder(reservation);
         reservation.setId(id);
 
-        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).contentType(MediaType.APPLICATION_JSON).body(reservation);
+        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId()))
+                .contentType(MediaType.APPLICATION_JSON).body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
@@ -70,8 +75,7 @@ public class ReservationController {
         boolean exist = reservationUpdatingDAO.delete(id);
         if (!exist) {
             return ResponseEntity.badRequest().build();
-        }
-        else{
+        } else {
             return ResponseEntity.noContent().build();
         }
     }
