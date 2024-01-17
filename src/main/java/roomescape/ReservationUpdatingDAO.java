@@ -47,13 +47,11 @@ public class ReservationUpdatingDAO {
     }
 
     public boolean delete(Long id) {
-        String sql = "SELECT COUNT(*) FROM reservation WHERE id = ?";
-        int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
-        if (count == 0) {
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        int num = jdbcTemplate.update(sql, id);
+        if (num == 0) {
             return false;
         }
-        sql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(sql, id);
         return true;
     }
 }
