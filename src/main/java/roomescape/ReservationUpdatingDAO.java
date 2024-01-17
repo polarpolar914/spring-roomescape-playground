@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ReservationUpdatingDAO {
+    private static ReservationUpdatingDAO instance = null;
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         Reservation reservation = new Reservation(resultSet.getLong("id"), resultSet.getString("name"),
@@ -17,8 +18,15 @@ public class ReservationUpdatingDAO {
         return reservation;
     };
 
-    public ReservationUpdatingDAO(JdbcTemplate jdbcTemplate) {
+    protected ReservationUpdatingDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public static ReservationUpdatingDAO getInstance(JdbcTemplate jdbcTemplate) {
+        if (instance == null) {
+            instance = new ReservationUpdatingDAO(jdbcTemplate);
+        }
+        return instance;
     }
 
     public Long insertWithKeyHolder(Reservation reservation) {

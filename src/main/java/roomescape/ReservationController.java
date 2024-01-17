@@ -51,7 +51,7 @@ public class ReservationController {
             return handleNotFoundReservationException(new NotFoundReservationException("Time of Reservation is empty"));
         }
 
-        ReservationUpdatingDAO reservationUpdatingDAO = new ReservationUpdatingDAO(jdbcTemplate);
+        ReservationUpdatingDAO reservationUpdatingDAO = ReservationUpdatingDAO.getInstance(jdbcTemplate);
         Long id = reservationUpdatingDAO.insertWithKeyHolder(reservation);
         reservation.setId(id);
 
@@ -71,7 +71,7 @@ public class ReservationController {
          reservations.remove(reservation);
          **/
 
-        ReservationUpdatingDAO reservationUpdatingDAO = new ReservationUpdatingDAO(jdbcTemplate);
+        ReservationUpdatingDAO reservationUpdatingDAO = ReservationUpdatingDAO.getInstance(jdbcTemplate);
         boolean exist = reservationUpdatingDAO.delete(id);
         if (!exist) {
             return ResponseEntity.badRequest().build();
