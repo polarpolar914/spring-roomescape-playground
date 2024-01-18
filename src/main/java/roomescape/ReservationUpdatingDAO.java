@@ -13,11 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ReservationUpdatingDAO {
     private static ReservationUpdatingDAO instance = null;
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation(resultSet.getLong("id"), resultSet.getString("name"),
-                resultSet.getString("date"), resultSet.getString("time"));
-        return reservation;
-    };
 
     protected ReservationUpdatingDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
