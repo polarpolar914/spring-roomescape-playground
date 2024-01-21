@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,12 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class TimeController {
-    private JdbcTemplate jdbcTemplate;
-
     @Autowired
-    protected TimeController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private TimeService timeService;
 
     @GetMapping("/time")
     public String time() {
@@ -30,8 +25,7 @@ public class TimeController {
 
     @GetMapping("/times")
     public ResponseEntity<List<Time>> read() {
-        TimeQueryingDAO timeQueryingDAO = TimeQueryingDAO.getInstance(jdbcTemplate);
-        List<Time> times = timeQueryingDAO.findAllTimes();
+        List<Time> times = timeService.findAllTime();
         return ResponseEntity.ok().body(times);
     }
 
@@ -41,8 +35,7 @@ public class TimeController {
             return handleNotFoundTimeException(new NotFoundTimeException("Time of Time is empty"));
         }
 
-        TimeUpdatingDAO timeUpdatingDAO = TimeUpdatingDAO.getInstance(jdbcTemplate);
-        Long id = timeUpdatingDAO.insertWithKeyHolder(time);
+        Long id = timeService.createTime(time);
         time.setId(id);
 
         return ResponseEntity.created(URI.create("/times/" + time.getId()))
@@ -51,8 +44,7 @@ public class TimeController {
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        TimeUpdatingDAO timeUpdatingDAO = TimeUpdatingDAO.getInstance(jdbcTemplate);
-        boolean exist = timeUpdatingDAO.delete(id);
+        boolean exist = timeService.deleteTime(id);
         if (!exist) {
             return ResponseEntity.badRequest().build();
         } else {
