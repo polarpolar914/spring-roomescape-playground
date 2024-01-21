@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class ReservationController {
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private ReservationService reservationService;
 
     @GetMapping("/reservation")
     public String reservation() {
@@ -26,8 +25,7 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> read() {
-        ReservationQueryingDAO reservationQueryingDAO = ReservationQueryingDAO.getInstance(jdbcTemplate);
-        List<Reservation> reservations = reservationQueryingDAO.findAllReservations();
+        List<Reservation> reservations = reservationService.findAllReservations();
         return ResponseEntity.ok().body(reservations);
     }
 
@@ -43,8 +41,7 @@ public class ReservationController {
             return handleNotFoundReservationException(new NotFoundReservationException("Time of Reservation is empty"));
         }
 
-        ReservationUpdatingDAO reservationUpdatingDAO = ReservationUpdatingDAO.getInstance(jdbcTemplate);
-        Long id = reservationUpdatingDAO.insertWithKeyHolder(reservation);
+        Long id = reservationService.createReservation(reservation);
         reservation.setId(id);
 
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId()))
@@ -53,8 +50,7 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        ReservationUpdatingDAO reservationUpdatingDAO = ReservationUpdatingDAO.getInstance(jdbcTemplate);
-        boolean exist = reservationUpdatingDAO.delete(id);
+        boolean exist = reservationService.deleteReservation(id);
         if (!exist) {
             return ResponseEntity.badRequest().build();
         } else {
