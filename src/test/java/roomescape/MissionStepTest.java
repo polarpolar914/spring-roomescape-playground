@@ -5,6 +5,7 @@ import static org.hamcrest.core.Is.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -22,26 +23,19 @@ public class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ReservationController reservationController;
 
     @Test
     void 일단계() {
-        RestAssured.given().log().all()
-                .when().get("/")
-                .then().log().all()
-                .statusCode(200);
+        RestAssured.given().log().all().when().get("/").then().log().all().statusCode(200);
     }
 
     @Test
     void 이단계() {
-        RestAssured.given().log().all()
-                .when().get("/reservation")
-                .then().log().all()
-                .statusCode(200);
+        RestAssured.given().log().all().when().get("/reservation").then().log().all().statusCode(200);
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
+        RestAssured.given().log().all().when().get("/reservations").then().log().all().statusCode(200)
                 .body("size()", is(3)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
     }
 
@@ -52,30 +46,15 @@ public class MissionStepTest {
         params.put("date", "2023-08-05");
         params.put("time", "15:40");
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/1")
-                .body("id", is(1));
+        RestAssured.given().log().all().contentType(ContentType.JSON).body(params).when().post("/reservations").then()
+                .log().all().statusCode(201).header("Location", "/reservations/1").body("id", is(1));
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
+        RestAssured.given().log().all().when().get("/reservations").then().log().all().statusCode(200)
                 .body("size()", is(1));
 
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(204);
+        RestAssured.given().log().all().when().delete("/reservations/1").then().log().all().statusCode(204);
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
+        RestAssured.given().log().all().when().get("/reservations").then().log().all().statusCode(200)
                 .body("size()", is(0));
     }
 
@@ -87,18 +66,11 @@ public class MissionStepTest {
         params.put("time", "");
 
         // 필요한 인자가 없는 경우
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(400);
+        RestAssured.given().log().all().contentType(ContentType.JSON).body(params).when().post("/reservations").then()
+                .log().all().statusCode(400);
 
         // 삭제할 예약이 없는 경우
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(400);
+        RestAssured.given().log().all().when().delete("/reservations/1").then().log().all().statusCode(400);
     }
 
     @Test
@@ -117,11 +89,8 @@ public class MissionStepTest {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
                 "15:40");
 
-        List<Reservation> reservations = RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+        List<Reservation> reservations = RestAssured.given().log().all().when().get("/reservations").then().log().all()
+                .statusCode(200).extract().jsonPath().getList(".", Reservation.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
@@ -135,21 +104,13 @@ public class MissionStepTest {
         params.put("date", "2023-08-05");
         params.put("time", "10:00");
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(201)
-                .header("Location", "/reservations/1");
+        RestAssured.given().log().all().contentType(ContentType.JSON).body(params).when().post("/reservations").then()
+                .log().all().statusCode(201).header("Location", "/reservations/1");
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(1);
 
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(204);
+        RestAssured.given().log().all().when().delete("/reservations/1").then().log().all().statusCode(204);
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
@@ -160,24 +121,12 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("time", "10:00");
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(201)
-                .header("Location", "/times/1");
+        RestAssured.given().log().all().contentType(ContentType.JSON).body(params).when().post("/times").then().log()
+                .all().statusCode(201).header("Location", "/times/1");
 
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+        RestAssured.given().log().all().when().get("/times").then().log().all().statusCode(200).body("size()", is(1));
 
-        RestAssured.given().log().all()
-                .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(204);
+        RestAssured.given().log().all().when().delete("/times/1").then().log().all().statusCode(204);
     }
 
     @Test
@@ -187,11 +136,22 @@ public class MissionStepTest {
         reservation.put("date", "2023-08-05");
         reservation.put("time", "10:00");
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservation)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(400);
+        RestAssured.given().log().all().contentType(ContentType.JSON).body(reservation).when().post("/reservations")
+                .then().log().all().statusCode(400);
     }
+
+    @Test
+    void 십단계() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
+    }
+
 }
