@@ -1,7 +1,6 @@
 package roomescape;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class ReservationController {
-    private final List<Reservation> reservations = new ArrayList<>();
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -29,12 +26,6 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> read() {
-        //Test 코드의 .body("size()", is(3));를 통과시키기 위해 임의로 Reservation을 3개 생성
-        //reservations.add(new Reservation(1, "브라운", "2021-08-05", "15:40"));
-        //reservations.add(new Reservation(2, "브라운", "2021-08-05", "15:40"));
-        //reservations.add(new Reservation(3, "브라운", "2021-08-05", "15:40"));
-
-        //return ResponseEntity.ok(reservations); -- 2단계 코드
         ReservationQueryingDAO reservationQueryingDAO = ReservationQueryingDAO.getInstance(jdbcTemplate);
         List<Reservation> reservations = reservationQueryingDAO.findAllReservations();
         return ResponseEntity.ok().body(reservations);
@@ -62,16 +53,6 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        /** Reservation reservation = reservations.stream()
-         .filter(it -> Objects.equals(it.getId(), id))
-         .findFirst()
-         .orElse(null);
-         if(reservation == null) {
-         return ResponseEntity.badRequest().build();
-         }
-         reservations.remove(reservation);
-         **/
-
         ReservationUpdatingDAO reservationUpdatingDAO = ReservationUpdatingDAO.getInstance(jdbcTemplate);
         boolean exist = reservationUpdatingDAO.delete(id);
         if (!exist) {
