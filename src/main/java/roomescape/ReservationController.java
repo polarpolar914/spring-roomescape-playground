@@ -48,7 +48,7 @@ public class ReservationController {
         if (reservation.getDate().isEmpty()) {
             return handleNotFoundReservationException(new NotFoundReservationException("Date of Reservation is empty"));
         }
-        if (reservation.getTime().isEmpty()) {
+        if (reservation.getTime() == null) {
             return handleNotFoundReservationException(new NotFoundReservationException("Time of Reservation is empty"));
         }
 

@@ -11,7 +11,7 @@ public class ReservationQueryingDAO {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         Reservation reservation = new Reservation(resultSet.getLong("id"), resultSet.getString("name"),
-                resultSet.getString("date"), resultSet.getString("time"));
+                resultSet.getString("date"), new Time(resultSet.getLong("time_id"), resultSet.getString("time")));
         return reservation;
     };
 
