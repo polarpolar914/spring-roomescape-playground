@@ -2,7 +2,6 @@ package roomescape;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -33,7 +32,7 @@ public class ReservationUpdatingDAO {
         SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
-                .addValue("time", reservation.getTime());
+                .addValue("time_id", reservation.getTime().getId());
 
         Number key = jdbcInsert.executeAndReturnKey(namedParameters);
 
@@ -46,7 +45,8 @@ public class ReservationUpdatingDAO {
         String sql = "DELETE FROM reservation WHERE id = ?";
         int num = jdbcTemplate.update(sql, id);
         if (num == 0) { // 삭제할 대상이 없는 경우
-            handleNotFoundReservationException(new NotFoundReservationException("Reservation is not found in DB with id: " + id));
+            handleNotFoundReservationException(
+                    new NotFoundReservationException("Reservation is not found in DB with id: " + id));
             return false;
         }
         return true;
