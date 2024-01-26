@@ -9,6 +9,10 @@ public class Time {
         this.time = time;
     }
 
+    public static Time toEntity(long id, String time) {
+        return new Time(id, time);
+    }
+
     public String getTime() {
         return this.time;
     }

@@ -22,7 +22,7 @@ public class ReservationService {
     public ResponseEntity<Reservation> createReservation(ReservationAddRequest reservationAddRequest) {
         TimeQueryingDAO timeQueryingDAO = TimeQueryingDAO.getInstance(jdbcTemplate);
         ReservationUpdatingDAO reservationUpdatingDAO = ReservationUpdatingDAO.getInstance(jdbcTemplate);
-        Reservation reservation = new Reservation(-1, reservationAddRequest.getName(), reservationAddRequest.getDate(),
+        Reservation reservation = Reservation.toEntity(-1, reservationAddRequest.getName(), reservationAddRequest.getDate(),
                 timeQueryingDAO.findTimeById(reservationAddRequest.getTime()));
 
         if (reservation.getName().isEmpty()) {

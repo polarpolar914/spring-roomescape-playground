@@ -4,13 +4,13 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
+import roomescape.Time;
 @Repository
 public class TimeQueryingDAO {
     private static TimeQueryingDAO instance = null;
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Time> timeRowMapper = (resultSet, rowNum) -> {
-        Time time = new Time(resultSet.getLong("id"), resultSet.getString("time"));
+        Time time = Time.toEntity(resultSet.getLong("id"), resultSet.getString("time"));
         return time;
     };
 
@@ -31,7 +31,7 @@ public class TimeQueryingDAO {
     }
 
     public Time findTimeById(String id) {
-        String sql = "select * from time where time.id = ?";
+        String sql = "select * from time where id = ?";
         return jdbcTemplate.queryForObject(sql, timeRowMapper, id);
     }
 }
