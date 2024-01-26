@@ -29,4 +29,9 @@ public class TimeQueryingDAO {
         String sql = "select * from time";
         return jdbcTemplate.query(sql, timeRowMapper);
     }
+
+    public Time findTimeById(String id) {
+        String sql = "select * from time where time.id = ?";
+        return jdbcTemplate.queryForObject(sql, timeRowMapper, id);
+    }
 }
