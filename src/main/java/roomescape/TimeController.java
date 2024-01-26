@@ -31,29 +31,15 @@ public class TimeController {
 
     @PostMapping("/times")
     public ResponseEntity<Time> create(@RequestBody Time time) {
-        if (time.getTime().isEmpty()) {
-            return handleNotFoundTimeException(new NotFoundTimeException("Time of Time is empty"));
-        }
-
-        Long id = timeService.createTime(time);
-        time.setId(id);
-
-        return ResponseEntity.created(URI.create("/times/" + time.getId()))
-                .contentType(MediaType.APPLICATION_JSON).body(time);
+        return timeService.createTime(time);
     }
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        boolean exist = timeService.deleteTime(id);
-        if (!exist) {
-            return ResponseEntity.badRequest().build();
-        } else {
+        boolean deleted = timeService.deleteTime(id);
+        if (deleted) {
             return ResponseEntity.noContent().build();
         }
-    }
-
-    @ExceptionHandler(NotFoundTimeException.class)
-    public ResponseEntity handleNotFoundTimeException(NotFoundTimeException e) {
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
     }
 }

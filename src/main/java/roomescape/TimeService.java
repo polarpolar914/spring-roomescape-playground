@@ -1,9 +1,13 @@
 package roomescape;
 
+import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Service
 public class TimeService {
@@ -15,9 +19,18 @@ public class TimeService {
         return timeQueryingDAO.findAllTimes();
     }
 
-    public Long createTime(Time time) {
+    public ResponseEntity<Time> createTime(Time time) {
         TimeUpdatingDAO timeUpdatingDAO = TimeUpdatingDAO.getInstance(jdbcTemplate);
-        return timeUpdatingDAO.insertWithKeyHolder(time);
+
+        if (time.getTime().isEmpty()) {
+            return handleNotFoundTimeException(new NotFoundTimeException("Time of Time is empty"));
+        }
+
+        Long id = timeUpdatingDAO.insertWithKeyHolder(time);
+        time.setId(id);
+
+        return ResponseEntity.created(URI.create("/times/" + time.getId()))
+                .contentType(MediaType.APPLICATION_JSON).body(time);
     }
 
     public boolean deleteTime(Long id) {
@@ -25,5 +38,8 @@ public class TimeService {
         return timeUpdatingDAO.delete(id);
     }
 
-
+    @ExceptionHandler(NotFoundTimeException.class)
+    public ResponseEntity handleNotFoundTimeException(NotFoundTimeException e) {
+        return ResponseEntity.badRequest().build();
+    }
 }
