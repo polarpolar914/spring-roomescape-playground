@@ -33,7 +33,7 @@ public class ReservationUpdatingDAO {
         SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
-                .addValue("time", reservation.getTime());
+                .addValue("time_id", reservation.getTime().getId());
 
         Number key = jdbcInsert.executeAndReturnKey(namedParameters);
 
