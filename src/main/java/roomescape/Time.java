@@ -1,7 +1,12 @@
 package roomescape;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class Time {
+    @NotBlank
     private final String time;
+    @NotNull
     private long id;
 
     public Time(long id, String time) {

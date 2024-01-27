@@ -1,5 +1,6 @@
 package roomescape;
 
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class TimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<Time> create(@RequestBody Time timeAddRequest) {
+    public ResponseEntity<Time> create(final @Valid @RequestBody Time timeAddRequest) {
         Time time = timeService.createTime(timeAddRequest);
         return ResponseEntity.created(URI.create("/times/" + time.getId()))
                 .contentType(MediaType.APPLICATION_JSON).body(time);

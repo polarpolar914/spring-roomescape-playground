@@ -1,5 +1,6 @@
 package roomescape;
 
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody ReservationAddRequest reservationAddRequest) {
+    public ResponseEntity<Reservation> create(final @Valid @RequestBody ReservationAddRequest reservationAddRequest) {
         Reservation reservation = reservationService.createReservation(reservationAddRequest);
 
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId()))
@@ -38,7 +39,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(final @PathVariable Long id) {
         boolean exist = reservationService.deleteReservation(id);
         if (!exist) {
             return ResponseEntity.badRequest().build();
