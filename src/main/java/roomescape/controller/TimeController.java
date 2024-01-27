@@ -20,11 +20,6 @@ public class TimeController {
     @Autowired
     private TimeService timeService;
 
-    @GetMapping("/time")
-    public String time() {
-        return "time";
-    }
-
     @GetMapping("/times")
     public ResponseEntity<List<Time>> read() {
         List<Time> times = timeService.findAllTime();

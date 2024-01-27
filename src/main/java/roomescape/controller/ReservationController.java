@@ -21,11 +21,6 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
-    @GetMapping("/reservation")
-    public String reservation() {
-        return "new-reservation";
-    }
-
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> read() {
         List<Reservation> reservations = reservationService.findAllReservations();
