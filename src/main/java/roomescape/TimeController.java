@@ -30,8 +30,10 @@ public class TimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<Time> create(@RequestBody Time time) {
-        return timeService.createTime(time);
+    public ResponseEntity<Time> create(@RequestBody Time timeAddRequest) {
+        Time time = timeService.createTime(timeAddRequest);
+        return ResponseEntity.created(URI.create("/times/" + time.getId()))
+                .contentType(MediaType.APPLICATION_JSON).body(time);
     }
 
     @DeleteMapping("/times/{id}")

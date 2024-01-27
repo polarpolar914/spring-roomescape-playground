@@ -19,27 +19,16 @@ public class ReservationService {
         return reservationQueryingDAO.findAllReservations();
     }
 
-    public ResponseEntity<Reservation> createReservation(ReservationAddRequest reservationAddRequest) {
+    public Reservation createReservation(ReservationAddRequest reservationAddRequest) {
         TimeQueryingDAO timeQueryingDAO = TimeQueryingDAO.getInstance(jdbcTemplate);
         ReservationUpdatingDAO reservationUpdatingDAO = ReservationUpdatingDAO.getInstance(jdbcTemplate);
         Reservation reservation = Reservation.toEntity(-1, reservationAddRequest.getName(), reservationAddRequest.getDate(),
                 timeQueryingDAO.findTimeById(reservationAddRequest.getTime()));
 
-        if (reservation.getName().isEmpty()) {
-            return handleNotFoundReservationException(new NotFoundReservationException("Name of Reservation is empty"));
-        }
-        if (reservation.getDate().isEmpty()) {
-            return handleNotFoundReservationException(new NotFoundReservationException("Date of Reservation is empty"));
-        }
-        if (reservation.getTime() == null) {
-            return handleNotFoundReservationException(new NotFoundReservationException("Time of Reservation is empty"));
-        }
-
         Long id = reservationUpdatingDAO.insertWithKeyHolder(reservation);
         reservation.setId(id);
 
-        return ResponseEntity.created(URI.create("/reservations/" + reservation.getId()))
-                .contentType(MediaType.APPLICATION_JSON).body(reservation);
+        return reservation;
     }
 
     public boolean deleteReservation(Long id) {

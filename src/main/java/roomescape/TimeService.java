@@ -19,18 +19,13 @@ public class TimeService {
         return timeQueryingDAO.findAllTimes();
     }
 
-    public ResponseEntity<Time> createTime(Time time) {
+    public Time createTime(Time time) {
         TimeUpdatingDAO timeUpdatingDAO = TimeUpdatingDAO.getInstance(jdbcTemplate);
-
-        if (time.getTime().isEmpty()) {
-            return handleNotFoundTimeException(new NotFoundTimeException("Time of Time is empty"));
-        }
 
         Long id = timeUpdatingDAO.insertWithKeyHolder(time);
         time.setId(id);
 
-        return ResponseEntity.created(URI.create("/times/" + time.getId()))
-                .contentType(MediaType.APPLICATION_JSON).body(time);
+        return time;
     }
 
     public boolean deleteTime(Long id) {
