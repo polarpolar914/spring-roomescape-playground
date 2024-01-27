@@ -1,13 +1,14 @@
-package roomescape;
+package roomescape.dao;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import roomescape.exception.NotFoundReservationException;
+import roomescape.domain.Reservation;
 
 @Repository
 public class ReservationUpdatingDAO {

@@ -1,10 +1,10 @@
-package roomescape;
+package roomescape.dao;
 
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import roomescape.Time;
+import roomescape.domain.Time;
 @Repository
 public class TimeQueryingDAO {
     private static TimeQueryingDAO instance = null;

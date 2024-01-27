@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.dao;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import roomescape.exception.NotFoundTimeException;
+import roomescape.domain.Time;
 
 @Repository
 public class TimeUpdatingDAO {
