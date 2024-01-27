@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(final @PathVariable Long id) {
+    public ResponseEntity<Void> delete(final @PathVariable @Positive Long id) {
         boolean exist = reservationService.deleteReservation(id);
         if (!exist) {
             return ResponseEntity.badRequest().build();
