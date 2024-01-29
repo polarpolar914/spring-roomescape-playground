@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import roomescape.dto.TimeAddRequest;
 import roomescape.exception.NotFoundTimeException;
 import roomescape.dao.TimeQueryingDAO;
 import roomescape.dao.TimeUpdatingDAO;
@@ -21,9 +22,10 @@ public class TimeService {
         return timeQueryingDAO.findAllTimes();
     }
 
-    public Time createTime(Time time) {
+    public Time createTime(TimeAddRequest timeAddRequest) {
         TimeUpdatingDAO timeUpdatingDAO = TimeUpdatingDAO.getInstance(jdbcTemplate);
 
+        Time time = Time.toEntity(-1L, timeAddRequest.getTime());
         Long id = timeUpdatingDAO.insertWithKeyHolder(time);
         time.setId(id);
 

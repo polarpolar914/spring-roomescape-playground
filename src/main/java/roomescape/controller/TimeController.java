@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.domain.Time;
+import roomescape.dto.TimeAddRequest;
 import roomescape.service.TimeService;
 
 @Controller
@@ -28,7 +29,7 @@ public class TimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<Time> create(final @Valid @RequestBody Time timeAddRequest) {
+    public ResponseEntity<Time> create(final @Valid @RequestBody TimeAddRequest timeAddRequest) {
         Time time = timeService.createTime(timeAddRequest);
         return ResponseEntity.created(URI.create("/times/" + time.getId()))
                 .contentType(MediaType.APPLICATION_JSON).body(time);
