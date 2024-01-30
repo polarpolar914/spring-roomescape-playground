@@ -13,4 +13,12 @@ public class TimeAddResponse {
     public static TimeAddResponse toDto(long id, String time) {
         return new TimeAddResponse(id, time);
     }
+
+    public String getTime() {
+        return time;
+    }
+
+    public long getId() {
+        return id;
+    }
 }

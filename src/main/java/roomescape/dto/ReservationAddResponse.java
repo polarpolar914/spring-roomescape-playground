@@ -18,4 +18,20 @@ public class ReservationAddResponse {
     public static ReservationAddResponse toDto(long id, String name, String date, Time time) {
         return new ReservationAddResponse(id, name, date, time);
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public Time getTime() {
+        return time;
+    }
 }

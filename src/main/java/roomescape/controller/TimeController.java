@@ -1,32 +1,30 @@
 package roomescape.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Time;
 import roomescape.dto.TimeAddRequest;
 import roomescape.dto.TimeAddResponse;
-import roomescape.dto.TimeReadResponse;
 import roomescape.service.TimeService;
 
-@Controller
+@RestController
 public class TimeController {
     @Autowired
     private TimeService timeService;
 
     @GetMapping("/times")
-    public ResponseEntity<TimeReadResponse> read() {
-        TimeReadResponse timeReadResponse = new TimeReadResponse(timeService.findAllTime());
+    public ResponseEntity<List<Time>> read() {
+        List<Time> timeReadResponse = timeService.findAllTime();
         return ResponseEntity.ok().body(timeReadResponse);
     }
 
