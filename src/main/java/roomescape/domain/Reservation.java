@@ -1,5 +1,8 @@
 package roomescape.domain;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Reservation {
     private final String name;
     private final String date;

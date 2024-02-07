@@ -1,12 +1,15 @@
 package roomescape.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import roomescape.dto.ReservationAddRequest;
+import roomescape.dto.ReservationReadResponse;
 import roomescape.exception.NotFoundReservationException;
 import roomescape.dao.ReservationQueryingDAO;
 import roomescape.dao.ReservationUpdatingDAO;
@@ -18,9 +21,11 @@ public class ReservationService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Reservation> findAllReservations() {
+    public ReservationReadResponse findAllReservations() {
         ReservationQueryingDAO reservationQueryingDAO = ReservationQueryingDAO.getInstance(jdbcTemplate);
-        return reservationQueryingDAO.findAllReservations();
+        List<Reservation> reservations = reservationQueryingDAO.findAllReservations();
+        ReservationReadResponse reservationReadResponse = ReservationReadResponse.toDto(reservations);
+        return reservationReadResponse;
     }
 
     public Reservation createReservation(ReservationAddRequest reservationAddRequest) {

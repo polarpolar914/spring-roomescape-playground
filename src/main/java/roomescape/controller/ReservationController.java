@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationAddRequest;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationAddResponse;
+import roomescape.dto.ReservationReadResponse;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -28,9 +30,9 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> read() {
-        List<Reservation> reservation = reservationService.findAllReservations();
-        return ResponseEntity.ok().body(reservation);
+    public ResponseEntity<List<?>> read() {
+        ReservationReadResponse reservationReadResponse = reservationService.findAllReservations();
+        return ResponseEntity.ok().body(reservationReadResponse.getLists());
     }
 
     @PostMapping("/reservations")

@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import roomescape.dto.TimeAddRequest;
+import roomescape.dto.TimeReadResponse;
 import roomescape.exception.NotFoundTimeException;
 import roomescape.dao.TimeQueryingDAO;
 import roomescape.dao.TimeUpdatingDAO;
@@ -17,9 +18,9 @@ public class TimeService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Time> findAllTime() {
+    public TimeReadResponse findAllTime() {
         TimeQueryingDAO timeQueryingDAO = TimeQueryingDAO.getInstance(jdbcTemplate);
-        return timeQueryingDAO.findAllTimes();
+        return TimeReadResponse.toDto(timeQueryingDAO.findAllTimes());
     }
 
     public Time createTime(TimeAddRequest timeAddRequest) {

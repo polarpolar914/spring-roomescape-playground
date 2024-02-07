@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Time;
 import roomescape.dto.TimeAddRequest;
 import roomescape.dto.TimeAddResponse;
+import roomescape.dto.TimeReadResponse;
 import roomescape.service.TimeService;
 
 @RestController
@@ -27,9 +28,9 @@ public class TimeController {
     }
 
     @GetMapping("/times")
-    public ResponseEntity<List<Time>> read() {
-        List<Time> timeReadResponse = timeService.findAllTime();
-        return ResponseEntity.ok().body(timeReadResponse);
+    public ResponseEntity<List<?>> read() {
+        TimeReadResponse timeReadResponse = timeService.findAllTime();
+        return ResponseEntity.ok().body(timeReadResponse.getLists());
     }
 
     @PostMapping("/times")

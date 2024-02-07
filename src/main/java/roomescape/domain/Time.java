@@ -13,6 +13,10 @@ public class Time {
         return new Time(id, time);
     }
 
+    public String toString() {
+        return this.time;
+    }
+
     public String getTime() {
         return this.time;
     }
