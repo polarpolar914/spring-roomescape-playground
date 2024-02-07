@@ -19,8 +19,12 @@ import roomescape.service.TimeService;
 
 @RestController
 public class TimeController {
+    private final TimeService timeService;
+
     @Autowired
-    private TimeService timeService;
+    public TimeController(TimeService timeService) {
+        this.timeService = timeService;
+    }
 
     @GetMapping("/times")
     public ResponseEntity<List<Time>> read() {
