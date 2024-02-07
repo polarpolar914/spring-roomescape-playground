@@ -21,13 +21,6 @@ public class ReservationQueryingDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public static ReservationQueryingDAO getInstance(JdbcTemplate jdbcTemplate) {
-        if (instance == null) {
-            instance = new ReservationQueryingDAO(jdbcTemplate);
-        }
-        return instance;
-    }
-
     public List<Reservation> findAllReservations() {
         String sql = "SELECT \n"
                 + "    r.id as reservation_id, \n"

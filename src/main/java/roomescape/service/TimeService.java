@@ -15,17 +15,20 @@ import roomescape.domain.Time;
 
 @Service
 public class TimeService {
+    private final TimeQueryingDAO timeQueryingDAO;
+    private final TimeUpdatingDAO timeUpdatingDAO;
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public TimeService(TimeQueryingDAO timeQueryingDAO, TimeUpdatingDAO timeUpdatingDAO) {
+        this.timeQueryingDAO = timeQueryingDAO;
+        this.timeUpdatingDAO = timeUpdatingDAO;
+    }
 
     public TimeReadResponse findAllTime() {
-        TimeQueryingDAO timeQueryingDAO = TimeQueryingDAO.getInstance(jdbcTemplate);
         return TimeReadResponse.toDto(timeQueryingDAO.findAllTimes());
     }
 
     public Time createTime(TimeAddRequest timeAddRequest) {
-        TimeUpdatingDAO timeUpdatingDAO = TimeUpdatingDAO.getInstance(jdbcTemplate);
-
         Time time = Time.toEntity(-1L, timeAddRequest.getTime());
         Long id = timeUpdatingDAO.insertWithKeyHolder(time);
         time.setId(id);
@@ -34,7 +37,6 @@ public class TimeService {
     }
 
     public boolean deleteTime(Long id) {
-        TimeUpdatingDAO timeUpdatingDAO = TimeUpdatingDAO.getInstance(jdbcTemplate);
         return timeUpdatingDAO.delete(id);
     }
 

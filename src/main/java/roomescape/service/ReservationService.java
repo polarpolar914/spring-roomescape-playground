@@ -18,19 +18,24 @@ import roomescape.domain.Reservation;
 
 @Service
 public class ReservationService {
+    private final ReservationQueryingDAO reservationQueryingDAO;
+    private final TimeQueryingDAO timeQueryingDAO;
+    private final ReservationUpdatingDAO reservationUpdatingDAO;
+
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public ReservationService(ReservationQueryingDAO reservationQueryingDAO, ReservationUpdatingDAO reservationUpdatingDAO, TimeQueryingDAO timeQueryingDAO) {
+        this.reservationQueryingDAO = reservationQueryingDAO;
+        this.timeQueryingDAO = timeQueryingDAO;
+        this.reservationUpdatingDAO = reservationUpdatingDAO;
+    }
 
     public ReservationReadResponse findAllReservations() {
-        ReservationQueryingDAO reservationQueryingDAO = ReservationQueryingDAO.getInstance(jdbcTemplate);
         List<Reservation> reservations = reservationQueryingDAO.findAllReservations();
         ReservationReadResponse reservationReadResponse = ReservationReadResponse.toDto(reservations);
         return reservationReadResponse;
     }
 
     public Reservation createReservation(ReservationAddRequest reservationAddRequest) {
-        TimeQueryingDAO timeQueryingDAO = TimeQueryingDAO.getInstance(jdbcTemplate);
-        ReservationUpdatingDAO reservationUpdatingDAO = ReservationUpdatingDAO.getInstance(jdbcTemplate);
         Reservation reservation = Reservation.toEntity(-1, reservationAddRequest.getName(), reservationAddRequest.getDate(),
                 timeQueryingDAO.findTimeById(reservationAddRequest.getTime()));
 
@@ -41,7 +46,6 @@ public class ReservationService {
     }
 
     public boolean deleteReservation(Long id) {
-        ReservationUpdatingDAO reservationUpdatingDAO = ReservationUpdatingDAO.getInstance(jdbcTemplate);
         return reservationUpdatingDAO.delete(id);
     }
 

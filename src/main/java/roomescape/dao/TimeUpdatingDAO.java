@@ -22,14 +22,6 @@ public class TimeUpdatingDAO {
     protected TimeUpdatingDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-    public static TimeUpdatingDAO getInstance(JdbcTemplate jdbcTemplate) {
-        if (instance == null) {
-            instance = new TimeUpdatingDAO(jdbcTemplate);
-        }
-        return instance;
-    }
-
     public Long insertWithKeyHolder(Time time) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("time")

@@ -18,13 +18,6 @@ public class TimeQueryingDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public static TimeQueryingDAO getInstance(JdbcTemplate jdbcTemplate) {
-        if (instance == null) {
-            instance = new TimeQueryingDAO(jdbcTemplate);
-        }
-        return instance;
-    }
-
     public List<Time> findAllTimes() {
         String sql = "select * from time";
         return jdbcTemplate.query(sql, timeRowMapper);

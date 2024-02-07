@@ -22,13 +22,6 @@ public class ReservationUpdatingDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public static ReservationUpdatingDAO getInstance(JdbcTemplate jdbcTemplate) {
-        if (instance == null) {
-            instance = new ReservationUpdatingDAO(jdbcTemplate);
-        }
-        return instance;
-    }
-
     public Long insertWithKeyHolder(Reservation reservation) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
