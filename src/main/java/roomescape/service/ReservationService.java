@@ -43,7 +43,7 @@ public class ReservationService {
         return reservation;
     }
 
-    public boolean deleteReservation(Long id) {
-        return reservationUpdatingDAO.delete(id);
+    public void deleteReservation(Long id) {
+        reservationUpdatingDAO.delete(id);
     }
 }

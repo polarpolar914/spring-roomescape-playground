@@ -42,20 +42,14 @@ public class ReservationUpdatingDAO {
         return key.longValue();
     }
 
-    public boolean delete(Long id) {
+    public void delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         int num = jdbcTemplate.update(sql, id);
         if (num == 0) { // 삭제할 대상이 없는 경우
             String errorMessage = "Reservation is not found in DB with id: " + id;
             log.error(errorMessage);
-            handleNotFoundReservationException(new NotFoundReservationException(errorMessage));
-            return false;
+            throw new NotFoundReservationException(errorMessage);
         }
-        return true;
     }
 
-    @ExceptionHandler(NotFoundReservationException.class)
-    public ResponseEntity handleNotFoundReservationException(NotFoundReservationException e) {
-        return ResponseEntity.badRequest().build();
-    }
 }

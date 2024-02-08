@@ -20,11 +20,11 @@ public class GlobalExceptionHandler extends RuntimeException{
 
     @ExceptionHandler(NotFoundReservationException.class)
     public ResponseEntity handleNotFoundReservationException(NotFoundReservationException e) {
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler(NotFoundTimeException.class)
     public ResponseEntity handleNotFoundTimeException(NotFoundTimeException e) {
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.notFound().build();
     }
 }

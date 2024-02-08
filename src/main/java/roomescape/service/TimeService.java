@@ -35,7 +35,7 @@ public class TimeService {
         return time;
     }
 
-    public boolean deleteTime(Long id) {
-        return timeUpdatingDAO.delete(id);
+    public void deleteTime(Long id) {
+        timeUpdatingDAO.delete(id);
     }
 }

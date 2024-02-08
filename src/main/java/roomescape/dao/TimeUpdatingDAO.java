@@ -36,20 +36,13 @@ public class TimeUpdatingDAO {
         return key.longValue();
     }
 
-    public boolean delete(Long id) {
+    public void delete(Long id) {
         String sql = "DELETE FROM time WHERE id = ?";
         int num = jdbcTemplate.update(sql, id);
         if (num == 0) { // 삭제할 대상이 없는 경우
             String errorMessage = "Time is not found in DB with id: " + id;
             log.error(errorMessage);
-            handleNotFoundTimeException(new NotFoundTimeException(errorMessage));
-            return false;
+            throw new NotFoundTimeException(errorMessage);
         }
-        return true;
-    }
-
-    @ExceptionHandler(NotFoundTimeException.class)
-    public ResponseEntity handleNotFoundTimeException(NotFoundTimeException e) {
-        return ResponseEntity.badRequest().build();
     }
 }
