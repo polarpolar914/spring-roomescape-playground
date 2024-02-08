@@ -17,4 +17,14 @@ public class GlobalExceptionHandler extends RuntimeException{
         log.error("Validation error: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
+
+    @ExceptionHandler(NotFoundReservationException.class)
+    public ResponseEntity handleNotFoundReservationException(NotFoundReservationException e) {
+        return ResponseEntity.badRequest().build();
+    }
+
+    @ExceptionHandler(NotFoundTimeException.class)
+    public ResponseEntity handleNotFoundTimeException(NotFoundTimeException e) {
+        return ResponseEntity.badRequest().build();
+    }
 }

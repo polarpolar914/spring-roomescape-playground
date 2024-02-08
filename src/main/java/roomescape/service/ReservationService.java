@@ -46,9 +46,4 @@ public class ReservationService {
     public boolean deleteReservation(Long id) {
         return reservationUpdatingDAO.delete(id);
     }
-
-    @ExceptionHandler(NotFoundReservationException.class)
-    public ResponseEntity handleNotFoundReservationException(NotFoundReservationException e) {
-        return ResponseEntity.badRequest().build();
-    }
 }

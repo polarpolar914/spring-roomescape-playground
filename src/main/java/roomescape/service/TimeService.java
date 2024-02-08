@@ -38,9 +38,4 @@ public class TimeService {
     public boolean deleteTime(Long id) {
         return timeUpdatingDAO.delete(id);
     }
-
-    @ExceptionHandler(NotFoundTimeException.class)
-    public ResponseEntity handleNotFoundTimeException(NotFoundTimeException e) {
-        return ResponseEntity.badRequest().build();
-    }
 }
