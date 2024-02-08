@@ -29,9 +29,8 @@ public class TimeService {
     }
 
     public Time createTime(TimeAddRequest timeAddRequest) {
-        Time time = Time.toEntity(-1L, timeAddRequest.getTime());
-        Long id = timeUpdatingDAO.insertWithKeyHolder(time);
-        time.setId(id);
+        Long id = timeUpdatingDAO.insertWithKeyHolder(timeAddRequest);
+        Time time = Time.toEntity(id, timeAddRequest.getTime());
 
         return time;
     }

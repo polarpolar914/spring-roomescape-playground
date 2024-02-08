@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import roomescape.dto.TimeAddRequest;
 import roomescape.exception.NotFoundTimeException;
 import roomescape.domain.Time;
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ public class TimeUpdatingDAO {
     protected TimeUpdatingDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-    public Long insertWithKeyHolder(Time time) {
+    public Long insertWithKeyHolder(TimeAddRequest time) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("time")
                 .usingGeneratedKeyColumns("id");
@@ -31,8 +32,6 @@ public class TimeUpdatingDAO {
                 .addValue("time", time.getTime());
 
         Number key = jdbcInsert.executeAndReturnKey(namedParameters);
-
-        time.setId(key.longValue());
 
         return key.longValue();
     }

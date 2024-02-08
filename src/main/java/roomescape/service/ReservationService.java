@@ -36,11 +36,9 @@ public class ReservationService {
     }
 
     public Reservation createReservation(ReservationAddRequest reservationAddRequest) {
-        Reservation reservation = Reservation.toEntity(-1, reservationAddRequest.getName(), reservationAddRequest.getDate(),
-                timeQueryingDAO.findTimeById(reservationAddRequest.getTime()));
+        Long id = reservationUpdatingDAO.insertWithKeyHolder(reservationAddRequest);
 
-        Long id = reservationUpdatingDAO.insertWithKeyHolder(reservation);
-        reservation.setId(id);
+        Reservation reservation = Reservation.toEntity(id, reservationAddRequest.getName(), reservationAddRequest.getDate(), timeQueryingDAO.findTimeById(reservationAddRequest.getTime()));
 
         return reservation;
     }
